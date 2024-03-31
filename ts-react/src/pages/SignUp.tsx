@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import "./SignUp.css";
-import { EmailField } from "../components/EmailField.jsx";
-import { PasswordField } from "../components/PasswordField.jsx";
 import { Title } from "../components/Title";
 import { Button } from "../components/Button";
 import { translateError } from "../utils/translateError.js";
 import { useNavigate } from "react-router-dom";
+import { FormField } from "../components/FormField";
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -46,21 +45,27 @@ export const SignUp = () => {
         }}
       >
         <Title>Sign up with email</Title>
+
         <p>Enter your email address to create an account.</p>
 
-        <EmailField
+        <FormField
           id="email"
           labelText="Your email"
           value={email}
           onChange={setEmail}
+          type={"email"}
         />
-        <PasswordField
+
+        <FormField
           id="password"
           labelText="Your password"
           value={password}
           onChange={setPassword}
+          type={"password"}
         />
+
         {errorMessage && <p>{translateError(errorMessage)}</p>}
+
         <Button title="Signup" />
       </form>
     </main>
