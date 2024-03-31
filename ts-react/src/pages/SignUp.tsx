@@ -5,6 +5,7 @@ import { Button } from "../components/Button";
 import { translateError } from "../utils/translateError.js";
 import { useNavigate } from "react-router-dom";
 import { FormField } from "../components/FormField";
+import axios from "axios";
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -25,29 +26,29 @@ export const SignUp = () => {
     setPassword(value);
   };
 
+  // TODO:
+  //headers: {
+  //  "Content-Type": "application/json",
+  //}
+
   const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    fetch("https://backend-login-placeholder.deno.dev/api/users", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    axios
+      .post("https://backend-login-placeholder.deno.dev/api/users", {
+        email,
+        password,
+      })
       .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        if (data.status === "error") {
-          throw new Error(data.code);
+        if (response.statusText === "error") {
+          throw new Error(response.statusText);
         }
-      })
-      .then(() => {
         navigate("/success");
       })
       .catch((error) => {
-        setErrorMessage(error.message);
+        if (error.response) {
+          setErrorMessage(error.response.data.code);
+        }
       });
   };
 
