@@ -6,6 +6,12 @@ import { translateError } from "../utils/translateError.js";
 import { useNavigate } from "react-router-dom";
 import { FormField } from "../components/FormField";
 import axios from "axios";
+import { useMutation } from "react-query";
+
+type LoginData = {
+  email: string;
+  password: string;
+};
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -26,16 +32,18 @@ export const SignUp = () => {
     setPassword(value);
   };
 
-  // TODO:
-  //headers: {
-  //  "Content-Type": "application/json",
-  //}
+  const loginMutation = useMutation((loginData: LoginData) => {
+    return axios.post(
+      "https://backend-login-placeholder.deno.dev/api/users",
+      loginData
+    );
+  });
 
   const handleOnSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    axios
-      .post("https://backend-login-placeholder.deno.dev/api/users", {
+    loginMutation
+      .mutateAsync({
         email,
         password,
       })
